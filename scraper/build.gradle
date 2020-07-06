@@ -25,12 +25,12 @@
 plugins {
     id 'java'
     id 'com.github.ben-manes.versions' version '0.28.0'
-    id "io.freefair.lombok" version "5.1.0"
+    id 'io.freefair.lombok' version '5.1.0'
 }
 
 allprojects {
     // Use the temp directory to build temporals
-    buildDir = "${System.env.TEMP}//gradle-build//${rootProject.name}//${project.name}"
+    // buildDir = "${System.env.TEMP}//gradle-build//${rootProject.name}//${project.name}"
 }
 
 group 'cl.ucn.disc.pdis'
@@ -75,5 +75,14 @@ dependencies {
 
     // Jsoup
     implementation "org.jsoup:jsoup:1.13.1"
+
+    // JSON
+    implementation 'com.google.code.gson:gson:2.8.6'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+    testCompileOnly 'org.projectlombok:lombok:1.18.12'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
 
 }
