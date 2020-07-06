@@ -28,11 +28,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Nullable;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -70,43 +65,15 @@ public final class Main {
 
             log.debug("Testing for id {} ...", id);
 
-            // Just wait
-            sleep();
-
-            // The HTML document
-            final Document document = Jsoup.connect(
-                    "http://online.ucn.cl/directoriotelefonicoemail/fichaGenerica/?cod=" + id)
-                    .get();
-
-            // Trying to get the nombre
-            final String nombre = getText(document, "lblNombre");
-            if (nombre == null) {
-                log.debug("Name not found in id {}, skipping !!", id);
-                // Not found, skipping!
-                continue;
+            // Get the persona from the agenda ucn
+            final Persona persona = DirectorioUCN.scrape(id);
+            if (persona != null) {
+                // Insert into the list
+                personas.add(persona);
             }
 
-            // All the data ..
-            final String cargo = getText(document, "lblCargo");
-            final String unidad = getText(document, "lblUnidad");
-            final String email = getText(document, "lblEmail");
-            final String telefono = getText(document, "lblTelefono");
-            final String oficina = getText(document, "lblOficina");
-            final String direccion = getText(document, "lblDireccion");
-
-            // Create a new persona.
-            final Persona persona = Persona.builder()
-                    .key(id)
-                    .nombre(nombre)
-                    .cargo(cargo)
-                    .unidad(unidad)
-                    .email(email)
-                    .telefonoFijo(telefono)
-                    .oficina(oficina)
-                    .build();
-
-            // Insert into the list
-            personas.add(persona);
+            // Just wait
+            sleep();
 
         }
 
@@ -128,29 +95,6 @@ public final class Main {
 
     }
 
-    /**
-     * @param document to use.
-     * @param id       to find.
-     * @return the value.
-     */
-    @Nullable
-    private static String getText(final Document document, final String id) {
-
-        final Element element = document.getElementById(id);
-        if (element == null) {
-            return null;
-        }
-
-        final String text = element.text();
-        if (StringUtils.isEmpty(text)) {
-            return null;
-        }
-
-        final String value = StringUtils.trim(text);
-        log.debug("{} -> {}", id, value);
-        return value;
-
-    }
 
     /**
      * Just wait.
