@@ -8,7 +8,7 @@
 ## Tecnologías
 
 * Java:
-    * [JDK v9](https://openjdk.java.net/projects/jdk9/).
+    * [JDK v11](https://openjdk.java.net/projects/jdk/11/).
     * [Jetbrains IntelliJ 2020.2 EAP](https://www.jetbrains.com/idea/nextversion/).
     * [Gradle v6.5](https://gradle.org/).
     * [JUnit v5.7.0](https://junit.org/junit5/).
