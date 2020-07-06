@@ -88,6 +88,7 @@ public final class DirectorioUCN {
                 .email(email)
                 .telefonoFijo(telefono)
                 .oficina(oficina)
+                .direccionOficina(direccion)
                 .build();
 
         return persona;

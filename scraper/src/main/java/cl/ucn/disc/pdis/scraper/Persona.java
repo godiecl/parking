@@ -109,6 +109,13 @@ public final class Persona {
     private String direccion;
 
     /**
+     * The Direccion.
+     */
+    @Getter
+    @Column(nullable = false)
+    private String direccionOficina;
+
+    /**
      * The telefono fijo.
      */
     @Getter
