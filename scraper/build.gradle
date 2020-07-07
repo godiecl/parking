@@ -30,11 +30,11 @@ plugins {
 
 allprojects {
     // Use the temp directory to build temporals
-    // buildDir = "${System.env.TEMP}//gradle-build//${rootProject.name}//${project.name}"
+    buildDir = "${System.env.TEMP}//gradle-build//${rootProject.name}//${project.name}"
 }
 
 group 'cl.ucn.disc.pdis'
-version '0.0.3'
+version '0.0.5'
 
 // The java version code
 java {
