@@ -67,8 +67,15 @@ public final class Main {
             // Get the fichas from the agenda ucn
             final DirectorioUCN.Ficha ficha = DirectorioUCN.scrape(id);
             if (ficha != null) {
-                // Insert into the list
+
+                // Into the list
                 fichas.add(ficha);
+
+                // Ruts
+                final List<NombreRutFirma.Rutificador> ruts = NombreRutFirma.scrape(ficha.getNombre());
+                for (final NombreRutFirma.Rutificador rutificador : ruts) {
+                    log.debug("{} -> {} -> {}", ficha.getNombre(), rutificador.getNombre(), rutificador.getRut());
+                }
             }
 
             // Just wait
