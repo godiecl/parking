@@ -106,14 +106,28 @@ public final class Persona {
      */
     @Getter
     @Column(nullable = false)
+    private String direccionOficina;
+
+    /**
+     * The Sexo.
+     */
+    @Getter
+    @Column
+    private Sexo sexo;
+
+    /**
+     * The Direccion.
+     */
+    @Getter
+    @Column
     private String direccion;
 
     /**
      * The Direccion.
      */
     @Getter
-    @Column(nullable = false)
-    private String direccionOficina;
+    @Column
+    private String comuna;
 
     /**
      * The telefono fijo.
@@ -128,5 +142,13 @@ public final class Persona {
     @Getter
     @Column
     private String telefonoMovil;
+
+    /**
+     * The Sexo.
+     */
+    public enum Sexo {
+        MASCULINO,
+        FEMENINO,
+    }
 
 }
