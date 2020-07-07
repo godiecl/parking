@@ -1,0 +1,77 @@
+#Junk Files
+*.DS_Store
+[Tt]humbs.db
+*.swp
+*.*~
+project.lock.json
+.DS_Store
+*.pyc
+nupkg/
+
+#Visual Studio Files
+[Oo]bj
+[Bb]in
+[Dd]ebug
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+[Bb]uild/
+x64/
+x86/
+*.user
+*.suo
+*.exe
+*.pdb
+*.aps
+*_i.c
+*_p.c
+*.ncb
+*.tlb
+*.tlh
+*.[Cc]ache
+*.bak
+*.ilk
+*.log
+*.lib
+*.sbr
+*.sdf
+ipch/
+*.dbmdl
+*.csproj.user
+*.cache
+*.vspscc
+*.vssscc
+*.bak.*
+msbuild.log
+msbuild.err
+msbuild.wrn
+
+# User-specific files
+*.userosscache
+*.sln.docstates
+
+#Tools
+_ReSharper.*
+_ReSharper*/
+*.resharper
+*.resharper.user
+[Nn][Dd]epend[Oo]ut*/
+Ankh.NoLoad
+
+#Other
+.svn
+
+# Idea
+.idea/**/.idea/$CACHE_FILE$
+.idea/**/.idea/encodings.xml
+.idea/**/.idea/indexLayout.xml
+.idea/**/.idea/misc.xml
+.idea/**/.idea/vcs.xml
+.idea/**/.idea/.gitignore
+.idea/**/riderModule.iml
+
+# Ignore the generated code of ZeroIce.
+generated/
+
+# Visual Studio 2015
+.vs/
