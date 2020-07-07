@@ -50,26 +50,25 @@ public final class Main {
      * @param args to use.
      * @throws IOException if any error.
      */
-    @SuppressWarnings("LawOfDemeter")
     public static void main(String[] args) throws IOException {
 
         // from .. to ..
         final int ini = 21;
-        final int end = 40; // 40000;
+        final int end = 29; // 40000;
 
-        // Contenedor of Personas
-        final List<Persona> personas = new ArrayList<>(100);
+        // Contenedor of Fichas
+        final List<DirectorioUCN.Ficha> fichas = new ArrayList<>(100);
 
         log.debug("Getting the data from {} to {} ...", ini, end);
         for (int id = ini; id <= end; id++) {
 
             log.debug("Testing for id {} ...", id);
 
-            // Get the persona from the agenda ucn
-            final Persona persona = DirectorioUCN.scrape(id);
-            if (persona != null) {
+            // Get the fichas from the agenda ucn
+            final DirectorioUCN.Ficha ficha = DirectorioUCN.scrape(id);
+            if (ficha != null) {
                 // Insert into the list
-                personas.add(persona);
+                fichas.add(ficha);
             }
 
             // Just wait
@@ -77,18 +76,18 @@ public final class Main {
 
         }
 
-        log.debug("Personas founded: {}", personas.size());
+        log.debug("Fichas founded: {}", fichas.size());
 
         log.debug("Saving in json ..");
 
-        // Gson to use to convert List<Persona> to JSON.
+        // Gson to use to convert List<Ficha> to JSON.
         final Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .create();
 
         // Write in a file
-        try (final Writer writer = Files.newBufferedWriter(Paths.get("personas.json"))) {
-            gson.toJson(personas, writer);
+        try (final Writer writer = Files.newBufferedWriter(Paths.get("fichas.json"))) {
+            gson.toJson(fichas, writer);
         }
 
         log.debug("Done.");

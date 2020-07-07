@@ -24,7 +24,7 @@
 
 package cl.ucn.disc.pdis.scraper;
 
-import lombok.SneakyThrows;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
@@ -34,7 +34,7 @@ import org.jsoup.nodes.Element;
 import org.slf4j.helpers.MessageFormatter;
 
 /**
- * The Class to scrape a {@link Persona}.
+ * The Class to scrape a {@link Ficha}.
  *
  * @author Diego Urrutia-Astorga.
  */
@@ -47,13 +47,13 @@ public final class DirectorioUCN {
     private static final String URL = "http://online.ucn.cl/directoriotelefonicoemail/fichaGenerica/?cod={}";
 
     /**
-     * Recover all the data from Persona.
+     * Recover all the data.
      *
      * @param id to scrape.
-     * @return the {@link Persona}.
+     * @return the {@link Ficha}.
      */
     @SneakyThrows
-    public static Persona scrape(Integer id) {
+    public static Ficha scrape(Integer id) {
 
         // The URL to use
         final String url = MessageFormatter.format(URL, id).getMessage();
@@ -65,7 +65,7 @@ public final class DirectorioUCN {
         // All the data ..
         final String nombre = getText(document, "lblNombre");
         if (StringUtils.isEmpty(nombre)) {
-            log.debug("Name in id {} not found!", id);
+            log.debug("Ficha id {} not found!", id);
 
             //noinspection ReturnOfNull
             return null;
@@ -79,19 +79,16 @@ public final class DirectorioUCN {
         final String oficina = getText(document, "lblOficina");
         final String direccion = getText(document, "lblDireccion");
 
-        // Create a new persona.
-        final Persona persona = Persona.builder()
-                .key(id)
+        // Create a new Ficha.
+        return Ficha.builder()
                 .nombre(nombre)
                 .cargo(cargo)
                 .unidad(unidad)
                 .email(email)
-                .telefonoFijo(telefono)
-                .oficina(oficina)
-                .direccionOficina(direccion)
+                .telefono(telefono)
+                .direccion(direccion)
                 .build();
 
-        return persona;
     }
 
     /**
@@ -117,4 +114,36 @@ public final class DirectorioUCN {
         return value;
 
     }
+
+    /**
+     * The Funcionario/Academico info.
+     */
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static final class Ficha {
+
+        @Getter
+        private String nombre;
+
+        @Getter
+        private String cargo;
+
+        @Getter
+        private String unidad;
+
+        @Getter
+        private String email;
+
+        @Getter
+        private String telefono;
+
+        @Getter
+        private String oficina;
+
+        @Getter
+        private String direccion;
+
+    }
+
 }
