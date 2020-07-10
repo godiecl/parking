@@ -4,7 +4,7 @@
 * **Source**: [Búsqueda Directorio](http://online.ucn.cl/directoriotelefonicoemail/Default.aspx)
 * **Source**: [Nombre Rut y Firma - Rutificador](https://www.nombrerutyfirma.com/)
 
-### Java Libraries
+## Java Libraries
 
 * SLF4J: [org.slf4j:slf4j-api](https://mvnrepository.com/artifact/org.slf4j/slf4j-api)
 * Logback: [ch.qos.logback:logback-classic](https://mvnrepository.com/artifact/ch.qos.logback/logback-classic)
@@ -13,3 +13,64 @@
 * Lombok: [org.projectlombok:lombok](https://mvnrepository.com/artifact/org.projectlombok/lombok)
 * Commons-lang: [org.apache.commons:commons-lang3](https://mvnrepository.com/artifact/org.apache.commons/commons-lang3)
 * JPA: [javax.persistence:javax.persistence-api](https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api)
+
+## Domain Model
+
+@startuml
+
+class DirectorioUCN {
+    {static} - URL: String
+}
+
+class Ficha {
+    - nombre: String
+    - cargo: String
+    - unidad: String
+    - email: String
+    - telefono: String
+    - oficina: String
+    - direccion: String
+}
+
+class NombreRutFirma {
+    {static} - URL: String
+}
+
+class Rutificador {
+    - nombre: String
+    - rut: String
+    - sexo: String
+    - direccion: String
+    - comuna: String
+}
+
+class Persona <<Entity>> {
+    - id: Long
+    - key: Integer
+    - rut: String
+    - nombre: String
+    - email: String
+    - cargo: String
+    - unidad: String
+    - oficina: String
+    - direccionOficina: String
+    - sexo: Sexo
+    - direccion: String
+    - comuna: String
+    - telefonoFijo: String
+    - telefonoMovil: String
+}
+
+enum Sexo {
+    MASCULINO,
+    FEMENINO
+}
+
+Persona --> Sexo
+Persona *--> Rutificador
+Persona *--> Ficha
+
+NombreRutFirma +-- Rutificador
+DirectorioUCN +-- Ficha
+
+@enduml
