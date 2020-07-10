@@ -18,11 +18,18 @@
 
 @startuml
 
-class DirectorioUCN {
-    {static} - URL: String
+class Main {
+    {static} + main(String[])
+    {static} - sleep()
 }
 
-class Ficha {
+class DirectorioUCN {
+    {static} - URL: String
+    {static} + scrape(Integer): Ficha
+    {static} - getText(Document, String): String
+}
+
+class Ficha <<Builder>> {
     - nombre: String
     - cargo: String
     - unidad: String
@@ -34,9 +41,10 @@ class Ficha {
 
 class NombreRutFirma {
     {static} - URL: String
+    {static} + scrape(String): List<Rutificador>
 }
 
-class Rutificador {
+class Rutificador <<Builder>> {
     - nombre: String
     - rut: String
     - sexo: String
@@ -66,9 +74,10 @@ enum Sexo {
     FEMENINO
 }
 
+Main ..> DirectorioUCN: <<use>>
+Main ..> NombreRutFirma: <<use>>
+
 Persona --> Sexo
-Persona *--> Rutificador
-Persona *--> Ficha
 
 NombreRutFirma +-- Rutificador
 DirectorioUCN +-- Ficha
