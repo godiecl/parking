@@ -14,9 +14,13 @@
 * Commons-lang: [org.apache.commons:commons-lang3](https://mvnrepository.com/artifact/org.apache.commons/commons-lang3)
 * JPA: [javax.persistence:javax.persistence-api](https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api)
 
-## Domain Model
+## Class Diagram
 
-<div hidden>
+![](class.svg)
+
+<details><summary>PlantUML</summary>
+<p>
+
 ```
 @startuml
 
@@ -86,4 +90,6 @@ DirectorioUCN +-- Ficha
 
 @enduml
 ```
-</div>
+
+</p>
+</details>
