@@ -25,68 +25,111 @@
 @startuml
 
 class Main {
+    {static} - log: Logger<Main>
     {static} + main(String[])
     {static} - sleep()
+    {static} - getOrScrape(codigo: int, repo: Repository<Persona, Long>): Persona
 }
 
-class DirectorioUCN {
-    {static} - URL: String
-    {static} + scrape(Integer): Ficha
-    {static} - getText(Document, String): String
+package scraper {
+    class DirectorioUCN {
+        {static} - URL: String
+        {static} + scrape(Integer): Ficha
+        {static} - getText(Document, String): String
+    }
+    
+    class Ficha <<Builder>> {
+        - nombre: String
+        - cargo: String
+        - unidad: String
+        - email: String
+        - telefono: String
+        - oficina: String
+        - direccion: String
+    }
+    
+    class NombreRutFirma {
+        {static} - URL: String
+        {static} + scrape(String): List<Rutificador>
+    }
+    
+    class Rutificador <<Builder>> {
+        - nombre: String
+        - rut: String
+        - sexo: String
+        - direccion: String
+        - comuna: String
+    }
+
+    NombreRutFirma +-- Rutificador
+    DirectorioUCN +-- Ficha
 }
 
-class Ficha <<Builder>> {
-    - nombre: String
-    - cargo: String
-    - unidad: String
-    - email: String
-    - telefono: String
-    - oficina: String
-    - direccion: String
+package model {
+    class Persona <<Entity>> {
+        - id: Long
+        - codigo: Integer
+        - rut: String
+        - nombre: String
+        - email: String
+        - cargo: String
+        - unidad: String
+        - oficina: String
+        - direccionOficina: String
+        - sexo: Sexo
+        - direccion: String
+        - comuna: String
+        - telefonoFijo: String
+        - telefonoMovil: String
+        - status: Status
+    }
+
+    enum Sexo {
+        MASCULINO,
+        FEMENINO
+    }
+    
+    enum Status {
+        UCN_NOTFOUND,
+        UCN_SCRAPED,
+        NRF_NOTFOUND,
+        NRF_SCRAPED,
+        NRF_MANY,
+        UPLOADED,
+    }
+
+    Persona --> Sexo
+    Persona --> Status
 }
 
-class NombreRutFirma {
-    {static} - URL: String
-    {static} + scrape(String): List<Rutificador>
-}
+package DAO {
+    interface Repository<T, K> {
+        + findAll(): List<T>
+        + findAll(key: String, value: Object): List<T>
+        + findById(id: K)
+        + getQuery(): QueryBuilder<T, K>
+        + create(t: T): boolean
+        + update(t: T): boolean
+        + delete(t: T): boolean
+    }
+    
+    class RepositoryOrmLite<T, K> {
+        {static} - log: Logger<Main>
+        - theDao: Dao<T, K>
+    }
 
-class Rutificador <<Builder>> {
-    - nombre: String
-    - rut: String
-    - sexo: String
-    - direccion: String
-    - comuna: String
-}
-
-class Persona <<Entity>> {
-    - id: Long
-    - codigo: Integer
-    - rut: String
-    - nombre: String
-    - email: String
-    - cargo: String
-    - unidad: String
-    - oficina: String
-    - direccionOficina: String
-    - sexo: Sexo
-    - direccion: String
-    - comuna: String
-    - telefonoFijo: String
-    - telefonoMovil: String
-}
-
-enum Sexo {
-    MASCULINO,
-    FEMENINO
+    class TableUtils {
+        {static} + createTableIfNotExists()
+    }
+    
+    RepositoryOrmLite --|> Repository
+    RepositoryOrmLite ..> TableUtils: <<use>>
 }
 
 Main ..> DirectorioUCN: <<use>>
 Main ..> NombreRutFirma: <<use>>
-
-Persona --> Sexo
-
-NombreRutFirma +-- Rutificador
-DirectorioUCN +-- Ficha
+Main ..> Persona: <<use>>
+Main ..> Repository: <<use>>
 
 @enduml
 ```
