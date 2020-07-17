@@ -16,6 +16,8 @@
 
 ## Domain Model
 
+<div hidden>
+```
 @startuml
 
 class Main {
@@ -54,7 +56,7 @@ class Rutificador <<Builder>> {
 
 class Persona <<Entity>> {
     - id: Long
-    - key: Integer
+    - codigo: Integer
     - rut: String
     - nombre: String
     - email: String
@@ -83,3 +85,5 @@ NombreRutFirma +-- Rutificador
 DirectorioUCN +-- Ficha
 
 @enduml
+```
+</div>
