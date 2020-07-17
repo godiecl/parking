@@ -24,7 +24,7 @@
 
 plugins {
     id 'java'
-    id 'com.github.ben-manes.versions' version '0.28.0'
+    id 'com.github.ben-manes.versions' version '0.29.0'
     id 'io.freefair.lombok' version '5.1.0'
 }
 
@@ -86,7 +86,7 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
 
     // Commons-lang
-    implementation 'org.apache.commons:commons-lang3:3.10'
+    implementation 'org.apache.commons:commons-lang3:3.11'
 
     // Persistencia
     implementation 'javax.persistence:javax.persistence-api:2.2'
