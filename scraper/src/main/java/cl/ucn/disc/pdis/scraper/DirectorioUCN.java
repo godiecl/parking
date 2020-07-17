@@ -75,9 +75,10 @@ public final class DirectorioUCN {
         final String cargo = getText(document, "lblCargo");
         final String unidad = getText(document, "lblUnidad");
         final String email = getText(document, "lblEmail");
-        final String telefono = getText(document, "lblTelefono");
+        final String telefono = StringUtils.remove(getText(document, "lblTelefono"), "Fono ");
         final String oficina = getText(document, "lblOficina");
         final String direccion = getText(document, "lblDireccion");
+
 
         // Create a new Ficha.
         return Ficha.builder()

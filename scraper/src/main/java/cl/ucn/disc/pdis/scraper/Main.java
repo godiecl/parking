@@ -24,20 +24,20 @@
 
 package cl.ucn.disc.pdis.scraper;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import cl.ucn.disc.pdis.scraper.dao.Repository;
+import cl.ucn.disc.pdis.scraper.dao.RepositoryOrmLite;
+import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
 
 import java.io.IOException;
-import java.io.Writer;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
- * The Class.
+ * The Main class to scrape the agenda UCN.
  *
  * @author Diego Urrutia-Astorga.
  */
@@ -50,64 +50,137 @@ public final class Main {
      * @param args to use.
      * @throws IOException if any error.
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(final String[] args) throws IOException {
 
         // from .. to ..
-        final int ini = 21;
-        final int end = 29; // 40000;
+        final int ini = 1;
+        final int end = 40000;
 
-        // Contenedor of Fichas
-        final List<DirectorioUCN.Ficha> fichas = new ArrayList<>(100);
+        // Connection to the database
+        try (ConnectionSource cs = new JdbcConnectionSource("jdbc:sqlite:personas.db")) {
 
-        log.debug("Getting the data from {} to {} ...", ini, end);
-        for (int id = ini; id <= end; id++) {
+            // Create the db
+            TableUtils.createTableIfNotExists(cs, Persona.class);
 
-            log.debug("Testing for id {} ...", id);
+            // The repo of Persona
+            final Repository<Persona, Long> repo = new RepositoryOrmLite<>(cs, Persona.class);
 
-            // Get the fichas from the agenda ucn
-            final DirectorioUCN.Ficha ficha = DirectorioUCN.scrape(id);
-            if (ficha != null) {
+            log.debug("Getting the data from {} to {} ...", ini, end);
+            for (int codigo = ini; codigo <= end; codigo++) {
 
-                // Into the list
-                fichas.add(ficha);
+                // Get the persona from the backend
+                final Persona persona = getOrScrape(codigo, repo);
+                if (persona.getStatus() == Persona.Status.UCN_SCRAPED) {
 
-                // Ruts
-                final List<NombreRutFirma.Rutificador> ruts = NombreRutFirma.scrape(ficha.getNombre());
-                for (final NombreRutFirma.Rutificador rutificador : ruts) {
-                    log.debug("{} -> {} -> {}", ficha.getNombre(), rutificador.getNombre(), rutificador.getRut());
+                    final List<NombreRutFirma.Rutificador> rutificadors = NombreRutFirma.scrape(persona.getNombre());
+                    sleep();
+                    if (rutificadors.isEmpty()) {
+                        log.warn("Rutificador {} not found.", persona.getNombre());
+                        persona.setStatus(Persona.Status.NRF_NOTFOUND);
+                    }
+                    if (rutificadors.size() == 1) {
+                        log.info("Rutificador {} successful!", persona.getNombre());
+                        final NombreRutFirma.Rutificador rutificador = rutificadors.get(0);
+                        persona.setRut(rutificador.getRut());
+                        persona.setSexo(rutificador.getSexo().equalsIgnoreCase("VAR") ? Persona.Sexo.MASCULINO : Persona.Sexo.FEMENINO);
+                        persona.setDireccion(rutificador.getDireccion());
+                        persona.setComuna(rutificador.getComuna());
+                        persona.setStatus(Persona.Status.NRF_SCRAPED);
+                    } else {
+                        log.warn("Rutificador {} more than one data founded!", persona.getNombre());
+                        persona.setStatus(Persona.Status.NRF_MANY);
+                    }
+                    repo.update(persona);
                 }
+
             }
 
-            // Just wait
-            sleep();
-
-        }
-
-        log.debug("Fichas founded: {}", fichas.size());
-
-        log.debug("Saving in json ..");
-
-        // Gson to use to convert List<Ficha> to JSON.
-        final Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .create();
-
-        // Write in a file
-        try (final Writer writer = Files.newBufferedWriter(Paths.get("fichas.json"))) {
-            gson.toJson(fichas, writer);
+        } catch (SQLException ex) {
+            log.error("Error", ex);
         }
 
         log.debug("Done.");
 
     }
 
+    /**
+     * Get or scrap Persona from codigo.
+     *
+     * @param codigo  to get/scrape.
+     * @param theRepo used to connect.
+     * @return the {@link Persona}.
+     */
+    private static Persona getOrScrape(final int codigo, final Repository<Persona, Long> theRepo) {
+
+        // Get the Persona from backend
+        final List<Persona> personas = theRepo.findAll("codigo", codigo);
+        final Persona persona = personas.isEmpty() ? null : personas.get(0);
+
+        // Found persona
+        if (persona != null) {
+            return persona;
+        }
+
+        // Not found in the database
+        log.debug("Can't find Persona with codigo {} in the backend, scrapping ..", codigo);
+
+        // Get the ficha ..
+        final DirectorioUCN.Ficha ficha = DirectorioUCN.scrape(codigo);
+
+        // Just wait ..
+        sleep();
+
+        // If ficha null, insert Persona.Status.NOTFOUND
+        if (ficha == null) {
+            log.warn("Can't find Ficha {} in DirectorioUCN, skipping ..", codigo);
+
+            final Persona p = Persona.builder()
+                    .codigo(codigo)
+                    .status(Persona.Status.UCN_NOTFOUND)
+                    .build();
+
+            theRepo.create(p);
+
+            return p;
+        }
+
+        // The Persona
+        final Persona p = Persona.builder()
+                .codigo(codigo)
+                .nombre(ficha.getNombre())
+                .cargo(ficha.getCargo())
+                .unidad(ficha.getUnidad())
+                .email(ficha.getEmail())
+                .telefonoFijo(ficha.getTelefono())
+                .oficina(ficha.getOficina())
+                .direccion(ficha.getDireccion())
+                .status(Persona.Status.UCN_SCRAPED)
+                .build();
+
+        // Save!
+        theRepo.create(p);
+
+        return p;
+
+    }
+
+    /**
+     * Process all the Persona from codigo.
+     *
+     * @param codigo  to update.
+     * @param theRepo used to save.
+     */
+    private static void processingCodigo(final int codigo, final Repository<Persona, Long> theRepo) {
+
+
+    }
 
     /**
      * Just wait.
      */
     private static void sleep() {
         try {
-            Thread.sleep(1000 + RandomUtils.nextInt(0, 1001));
+            Thread.sleep(2000 + RandomUtils.nextInt(0, 2001));
         } catch (InterruptedException e) {
             // Nothing here
         }

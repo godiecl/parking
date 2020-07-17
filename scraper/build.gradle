@@ -91,4 +91,11 @@ dependencies {
     // Persistencia
     implementation 'javax.persistence:javax.persistence-api:2.2'
 
+    // ORM Lite
+    implementation 'com.j256.ormlite:ormlite-core:5.1'
+    implementation 'com.j256.ormlite:ormlite-jdbc:5.1'
+
+    // Database driver
+    implementation 'org.xerial:sqlite-jdbc:3.31.1'
+
 }

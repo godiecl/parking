@@ -24,10 +24,7 @@
 
 package cl.ucn.disc.pdis.scraper;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -63,6 +60,7 @@ public final class Persona {
      * The Rut.
      */
     @Getter
+    @Setter
     @Column(unique = true)
     private String rut;
 
@@ -70,48 +68,49 @@ public final class Persona {
      * The Nombre.
      */
     @Getter
-    @Column(nullable = false)
+    @Column
     private String nombre;
 
     /**
      * The Email.
      */
     @Getter
-    @Column(nullable = false)
+    @Column
     private String email;
 
     /**
      * The Cargo.
      */
     @Getter
-    @Column(nullable = false)
+    @Column
     private String cargo;
 
     /**
      * The Unidad.
      */
     @Getter
-    @Column(nullable = false)
+    @Column
     private String unidad;
 
     /**
      * The Oficina.
      */
     @Getter
-    @Column(nullable = false)
+    @Column
     private String oficina;
 
     /**
      * The Direccion.
      */
     @Getter
-    @Column(nullable = false)
+    @Column
     private String direccionOficina;
 
     /**
      * The Sexo.
      */
     @Getter
+    @Setter
     @Column
     private Sexo sexo;
 
@@ -119,6 +118,7 @@ public final class Persona {
      * The Direccion.
      */
     @Getter
+    @Setter
     @Column
     private String direccion;
 
@@ -126,6 +126,7 @@ public final class Persona {
      * The Direccion.
      */
     @Getter
+    @Setter
     @Column
     private String comuna;
 
@@ -144,6 +145,14 @@ public final class Persona {
     private String telefonoMovil;
 
     /**
+     * The Status.
+     */
+    @Getter
+    @Setter
+    @Column
+    private Status status;
+
+    /**
      * The Sexo.
      */
     public enum Sexo {
@@ -155,6 +164,36 @@ public final class Persona {
          * The Femenino.
          */
         FEMENINO,
+    }
+
+    /**
+     * The Status.
+     */
+    public enum Status {
+        /**
+         * Not found in Directorio UCN.
+         */
+        UCN_NOTFOUND,
+        /**
+         * Getted from Directorio UCN.
+         */
+        UCN_SCRAPED,
+        /**
+         * Not found in Rutificador.
+         */
+        NRF_NOTFOUND,
+        /**
+         * Found 1 in Rutificador.
+         */
+        NRF_SCRAPED,
+        /**
+         * Found more than 1 in Rutificador.
+         */
+        NRF_MANY,
+        /**
+         * Sended over ZeroIce.
+         */
+        UPLOADED,
     }
 
 }
