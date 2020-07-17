@@ -28,7 +28,6 @@ import cl.ucn.disc.pdis.scraper.dao.Repository;
 import cl.ucn.disc.pdis.scraper.dao.RepositoryOrmLite;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
-import com.j256.ormlite.table.TableUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
 
@@ -59,9 +58,6 @@ public final class Main {
         // Connection to the database
         try (ConnectionSource cs = new JdbcConnectionSource("jdbc:sqlite:personas.db")) {
 
-            // Create the db
-            TableUtils.createTableIfNotExists(cs, Persona.class);
-
             // The repo of Persona
             final Repository<Persona, Long> repo = new RepositoryOrmLite<>(cs, Persona.class);
 
@@ -72,12 +68,19 @@ public final class Main {
                 final Persona persona = getOrScrape(codigo, repo);
                 if (persona.getStatus() == Persona.Status.UCN_SCRAPED) {
 
-                    final List<NombreRutFirma.Rutificador> rutificadors = NombreRutFirma.scrape(persona.getNombre());
+                    // Sleeping
                     sleep();
+
+                    // Scrapping
+                    final List<NombreRutFirma.Rutificador> rutificadors = NombreRutFirma.scrape(persona.getNombre());
+
+                    // 1. Not found!
                     if (rutificadors.isEmpty()) {
                         log.warn("Rutificador {} not found.", persona.getNombre());
                         persona.setStatus(Persona.Status.NRF_NOTFOUND);
                     }
+
+                    // 2. Found exactly 1 record
                     if (rutificadors.size() == 1) {
                         log.info("Rutificador {} successful!", persona.getNombre());
                         final NombreRutFirma.Rutificador rutificador = rutificadors.get(0);
@@ -86,10 +89,15 @@ public final class Main {
                         persona.setDireccion(rutificador.getDireccion());
                         persona.setComuna(rutificador.getComuna());
                         persona.setStatus(Persona.Status.NRF_SCRAPED);
-                    } else {
+                    }
+
+                    // 3. Found more than 1 record
+                    if (rutificadors.size() > 1) {
                         log.warn("Rutificador {} more than one data founded!", persona.getNombre());
                         persona.setStatus(Persona.Status.NRF_MANY);
                     }
+
+                    // Save into the backend
                     repo.update(persona);
                 }
 
@@ -124,16 +132,17 @@ public final class Main {
         // Not found in the database
         log.debug("Can't find Persona with codigo {} in the backend, scrapping ..", codigo);
 
-        // Get the ficha ..
-        final DirectorioUCN.Ficha ficha = DirectorioUCN.scrape(codigo);
-
         // Just wait ..
         sleep();
+
+        // Get the ficha ..
+        final DirectorioUCN.Ficha ficha = DirectorioUCN.scrape(codigo);
 
         // If ficha null, insert Persona.Status.NOTFOUND
         if (ficha == null) {
             log.warn("Can't find Ficha {} in DirectorioUCN, skipping ..", codigo);
 
+            // Not found, save as UCN_NOTFOUND
             final Persona p = Persona.builder()
                     .codigo(codigo)
                     .status(Persona.Status.UCN_NOTFOUND)
@@ -144,7 +153,7 @@ public final class Main {
             return p;
         }
 
-        // The Persona
+        // Founded: save as UCN_SCRAPED
         final Persona p = Persona.builder()
                 .codigo(codigo)
                 .nombre(ficha.getNombre())
@@ -161,17 +170,6 @@ public final class Main {
         theRepo.create(p);
 
         return p;
-
-    }
-
-    /**
-     * Process all the Persona from codigo.
-     *
-     * @param codigo  to update.
-     * @param theRepo used to save.
-     */
-    private static void processingCodigo(final int codigo, final Repository<Persona, Long> theRepo) {
-
 
     }
 

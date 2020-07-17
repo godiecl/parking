@@ -28,6 +28,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -58,6 +59,13 @@ public class RepositoryOrmLite<T, K> implements Repository<T, K> {
         // Nullity test
         if (theClazz == null) {
             throw new IllegalArgumentException("Can't create Repository without the class");
+        }
+
+        // Create the db
+        try {
+            TableUtils.createTableIfNotExists(connectionSource, theClazz);
+        } catch (SQLException throwables) {
+            throw new RuntimeException(throwables);
         }
 
         try {
