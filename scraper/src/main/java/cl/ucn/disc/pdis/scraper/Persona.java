@@ -35,7 +35,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
- * The Class.
+ * The Persona Class.
  *
  * @author Diego Urrutia-Astorga.
  */
@@ -54,10 +54,10 @@ public final class Persona {
     private Long id;
 
     /**
-     * The Key.
+     * The Key of Directory UCN.
      */
     @Column(unique = true, nullable = false)
-    private Integer key;
+    private Integer codigo;
 
     /**
      * The Rut.
@@ -147,7 +147,13 @@ public final class Persona {
      * The Sexo.
      */
     public enum Sexo {
+        /**
+         * The Masculino.
+         */
         MASCULINO,
+        /**
+         * The Femenino.
+         */
         FEMENINO,
     }
 
