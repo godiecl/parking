@@ -28,7 +28,6 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.slf4j.helpers.MessageFormatter;
@@ -60,7 +59,7 @@ public final class DirectorioUCN {
         log.debug("Using {} ..", url);
 
         // The document to use as source.
-        final Document document = Jsoup.connect(url).get();
+        final Document document = ScrapperUtils.retrieve(url);
 
         // All the data ..
         final String nombre = getText(document, "lblNombre");
