@@ -185,8 +185,15 @@ public final class Main {
      * Just wait.
      */
     private static void sleep() {
+
+        // Milliseconds
+        int base = 2000;
+        int max = 3000;
+        int sleep = base + RandomUtils.nextInt(0,max + 1);
+        log.trace("Sleeping for {}ms.", sleep);
+
         try {
-            Thread.sleep(2000 + RandomUtils.nextInt(0, 2001));
+            Thread.sleep(sleep);
         } catch (InterruptedException e) {
             // Nothing here
         }
