@@ -95,7 +95,7 @@ dependencies {
     implementation 'com.j256.ormlite:ormlite-core:5.1'
     implementation 'com.j256.ormlite:ormlite-jdbc:5.1'
 
-    // Database driver
-    implementation 'org.xerial:sqlite-jdbc:3.31.1'
+    // SQLite Database driver
+    implementation 'org.xerial:sqlite-jdbc:3.32.3.1'
 
 }
