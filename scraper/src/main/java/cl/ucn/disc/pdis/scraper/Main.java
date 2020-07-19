@@ -55,8 +55,16 @@ public final class Main {
         final int ini = 1;
         final int end = 40000;
 
+        // The encryption key to use
+        // noinspection CallToSystemGetenv
+        final String dbkey = System.getenv("DB_KEY");
+        log.info("Using DBKEY={} as encryption key.", dbkey);
+
+        // The database to use
+        final String jdbc = "jdbc:sqlite:file:personas.db?cipher=chacha20&key=" + dbkey;
+
         // Connection to the database
-        try (ConnectionSource cs = new JdbcConnectionSource("jdbc:sqlite:personas.db")) {
+        try (ConnectionSource cs = new JdbcConnectionSource(jdbc)) {
 
             // The repo of Persona
             final Repository<Persona, Long> repo = new RepositoryOrmLite<>(cs, Persona.class);
