@@ -78,6 +78,10 @@ public final class Main {
 
                     // Sleeping
                     sleep();
+                    sleep();
+                    sleep();
+                    sleep();
+                    sleep();
 
                     // Scrapping
                     final List<NombreRutFirma.Rutificador> rutificadors = NombreRutFirma.scrape(persona.getNombre());
@@ -90,8 +94,8 @@ public final class Main {
 
                     // 2. Found exactly 1 record
                     if (rutificadors.size() == 1) {
-                        log.info("Rutificador {} successful!", persona.getNombre());
                         final NombreRutFirma.Rutificador rutificador = rutificadors.get(0);
+                        log.info("Rutificador {} successful: {} !!", persona.getNombre(), rutificador.getRut());
                         persona.setRut(rutificador.getRut());
                         persona.setSexo(rutificador.getSexo().equalsIgnoreCase("VAR") ? Persona.Sexo.MASCULINO : Persona.Sexo.FEMENINO);
                         persona.setDireccion(rutificador.getDireccion());
@@ -102,6 +106,9 @@ public final class Main {
                     // 3. Found more than 1 record
                     if (rutificadors.size() > 1) {
                         log.warn("Rutificador {} more than one data founded!", persona.getNombre());
+                        for (NombreRutFirma.Rutificador rutificador : rutificadors) {
+                            log.warn("* Rutificador: {} --> {}", rutificador.getRut(), rutificador.getNombre());
+                        }
                         persona.setStatus(Persona.Status.NRF_MANY);
                     }
 
