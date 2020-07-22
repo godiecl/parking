@@ -23,14 +23,69 @@
  */
 
 using System;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Parking.Dao;
+using Parking.ZeroIce;
+using Parking.ZeroIce.Services;
 
-namespace backend
+namespace Parking
 {
-    static class Program
+    /// <summary>
+    /// The Main class.
+    /// </summary>
+    public static class Program
     {
-        static void Main(string[] args)
+        /// <summary>
+        /// Main starting point.
+        /// </summary>
+        /// <param name="args"></param>
+        public static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            CreateHostBuilder(args).Build().Run();
         }
+
+        /// <summary>
+        /// Build and configure a Host.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>The IHostBuilder</returns>
+        private static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host
+            .CreateDefaultBuilder(args)
+            // Development, Staging, Production
+            .UseEnvironment("Development")
+            // Logging configuration
+            .ConfigureLogging(logging =>
+            {
+                logging.ClearProviders();
+                logging.AddConsole(options =>
+                {
+                    options.IncludeScopes = true;
+                    options.TimestampFormat = "[yyyyMMdd.HHmmss.fff] ";
+                    options.DisableColors = false;
+                });
+                logging.SetMinimumLevel(LogLevel.Trace);
+            })
+            // Enable Control+C listener
+            .UseConsoleLifetime()
+            // Service inside the DI
+            .ConfigureServices((hostContext, services) =>
+            {
+                // Repository
+                services.AddSingleton<RepositoryDisp_, RepositoryImpl>();
+                // The Context
+                services.AddDbContext<ParkingContext>();
+                // The Service
+                services.AddHostedService<ParkingService>();
+                // The logger
+                services.AddLogging();
+                // The wait 4 finish
+                services.Configure<HostOptions>(option =>
+                {
+                    option.ShutdownTimeout = TimeSpan.FromSeconds(15);
+                });
+            });
     }
 }
