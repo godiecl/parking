@@ -81,6 +81,11 @@ module ZeroIce {
             string unidad;
 
             /**
+             * The direccion
+             */
+            string direccion;
+
+            /**
              * The telefono movil
              */
             string telefono;

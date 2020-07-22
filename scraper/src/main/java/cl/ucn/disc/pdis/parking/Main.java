@@ -42,7 +42,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -63,7 +62,7 @@ public final class Main {
     public static void main(final String[] args) throws IOException {
 
         // from .. to ..
-        final int ini = 1;
+        final int ini = 26819;
         final int end = 40000;
 
         // The encryption key to use
@@ -242,6 +241,7 @@ public final class Main {
         persona.email = funcionario.getEmail();
         persona.cargo = funcionario.getCargo();
         persona.unidad = funcionario.getUnidad();
+        persona.direccion = funcionario.getDireccionOficina();
         persona.fijo = funcionario.getTelefonoFijo();
         if (funcionario.getSexo() != null) {
             persona.sexo = funcionario.getSexo() == Funcionario.Sexo.MASCULINO ? Sexo.MASCULINO : Sexo.FEMENINO;
