@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package cl.ucn.disc.pdis.scraper;
+package cl.ucn.disc.pdis.parking.model;
 
 import lombok.*;
 
@@ -32,7 +32,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
- * The Persona Class.
+ * The Funcionario Class.
  *
  * @author Diego Urrutia-Astorga.
  */
@@ -40,7 +40,7 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @Builder
 @Entity
-public final class Persona {
+public final class Funcionario {
 
     /**
      * The id: Primary Key (autoincrement).

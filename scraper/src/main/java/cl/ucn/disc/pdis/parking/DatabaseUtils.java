@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package cl.ucn.disc.pdis.scraper;
+package cl.ucn.disc.pdis.parking;
 
 import lombok.extern.slf4j.Slf4j;
 

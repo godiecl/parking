@@ -22,10 +22,13 @@
  * SOFTWARE.
  */
 
-package cl.ucn.disc.pdis.scraper;
+package cl.ucn.disc.pdis.parking;
 
-import cl.ucn.disc.pdis.scraper.dao.Repository;
-import cl.ucn.disc.pdis.scraper.dao.RepositoryOrmLite;
+import cl.ucn.disc.pdis.parking.dao.Repository;
+import cl.ucn.disc.pdis.parking.dao.RepositoryOrmLite;
+import cl.ucn.disc.pdis.parking.model.Funcionario;
+import cl.ucn.disc.pdis.parking.scrappers.DirectorioUCN;
+import cl.ucn.disc.pdis.parking.scrappers.NombreRutFirma;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import lombok.extern.slf4j.Slf4j;
@@ -61,20 +64,20 @@ public final class Main {
         log.info("Using DBKEY={} as encryption key.", dbkey);
 
         // The database to use
-        final String jdbc = "jdbc:sqlite:file:personas.db?cipher=chacha20&key=" + dbkey;
+        final String jdbc = "jdbc:sqlite:file:funcionarios.db?cipher=chacha20&key=" + dbkey;
 
         // Connection to the database
         try (ConnectionSource cs = new JdbcConnectionSource(jdbc)) {
 
-            // The repo of Persona
-            final Repository<Persona, Long> repo = new RepositoryOrmLite<>(cs, Persona.class);
+            // The repo of Funcionario
+            final Repository<Funcionario, Long> repo = new RepositoryOrmLite<>(cs, Funcionario.class);
 
             log.debug("Getting the data from {} to {} ...", ini, end);
             for (int codigo = ini; codigo <= end; codigo++) {
 
-                // Get the persona from the backend
-                final Persona persona = getOrScrape(codigo, repo);
-                if (persona.getStatus() == Persona.Status.UCN_SCRAPED) {
+                // Get the funcionario from the backend
+                final Funcionario funcionario = getOrScrape(codigo, repo);
+                if (funcionario.getStatus() == Funcionario.Status.UCN_SCRAPED) {
 
                     // Sleeping
                     sleep();
@@ -84,36 +87,36 @@ public final class Main {
                     sleep();
 
                     // Scrapping
-                    final List<NombreRutFirma.Rutificador> rutificadors = NombreRutFirma.scrape(persona.getNombre());
+                    final List<NombreRutFirma.Rutificador> rutificadors = NombreRutFirma.scrape(funcionario.getNombre());
 
                     // 1. Not found!
                     if (rutificadors.isEmpty()) {
-                        log.warn("Rutificador {} not found.", persona.getNombre());
-                        persona.setStatus(Persona.Status.NRF_NOTFOUND);
+                        log.warn("Rutificador {} not found.", funcionario.getNombre());
+                        funcionario.setStatus(Funcionario.Status.NRF_NOTFOUND);
                     }
 
                     // 2. Found exactly 1 record
                     if (rutificadors.size() == 1) {
                         final NombreRutFirma.Rutificador rutificador = rutificadors.get(0);
-                        log.info("Rutificador {} successful: {} !!", persona.getNombre(), rutificador.getRut());
-                        persona.setRut(rutificador.getRut());
-                        persona.setSexo(rutificador.getSexo().equalsIgnoreCase("VAR") ? Persona.Sexo.MASCULINO : Persona.Sexo.FEMENINO);
-                        persona.setDireccion(rutificador.getDireccion());
-                        persona.setComuna(rutificador.getComuna());
-                        persona.setStatus(Persona.Status.NRF_SCRAPED);
+                        log.info("Rutificador {} successful: {} !!", funcionario.getNombre(), rutificador.getRut());
+                        funcionario.setRut(rutificador.getRut());
+                        funcionario.setSexo(rutificador.getSexo().equalsIgnoreCase("VAR") ? Funcionario.Sexo.MASCULINO : Funcionario.Sexo.FEMENINO);
+                        funcionario.setDireccion(rutificador.getDireccion());
+                        funcionario.setComuna(rutificador.getComuna());
+                        funcionario.setStatus(Funcionario.Status.NRF_SCRAPED);
                     }
 
                     // 3. Found more than 1 record
                     if (rutificadors.size() > 1) {
-                        log.warn("Rutificador {} more than one data founded!", persona.getNombre());
+                        log.warn("Rutificador {} more than one data founded!", funcionario.getNombre());
                         for (NombreRutFirma.Rutificador rutificador : rutificadors) {
                             log.warn("* Rutificador: {} --> {}", rutificador.getRut(), rutificador.getNombre());
                         }
-                        persona.setStatus(Persona.Status.NRF_MANY);
+                        funcionario.setStatus(Funcionario.Status.NRF_MANY);
                     }
 
                     // Save into the backend
-                    repo.update(persona);
+                    repo.update(funcionario);
                 }
 
             }
@@ -127,25 +130,25 @@ public final class Main {
     }
 
     /**
-     * Get or scrap Persona from codigo.
+     * Get or scrap Funcionario from codigo.
      *
      * @param codigo  to get/scrape.
      * @param theRepo used to connect.
-     * @return the {@link Persona}.
+     * @return the {@link Funcionario}.
      */
-    private static Persona getOrScrape(final int codigo, final Repository<Persona, Long> theRepo) {
+    private static Funcionario getOrScrape(final int codigo, final Repository<Funcionario, Long> theRepo) {
 
-        // Get the Persona from backend
-        final List<Persona> personas = theRepo.findAll("codigo", codigo);
-        final Persona persona = personas.isEmpty() ? null : personas.get(0);
+        // Get the Funcionario from backend
+        final List<Funcionario> funcionarios = theRepo.findAll("codigo", codigo);
+        final Funcionario funcionario = funcionarios.isEmpty() ? null : funcionarios.get(0);
 
-        // Found persona
-        if (persona != null) {
-            return persona;
+        // Found funcionario
+        if (funcionario != null) {
+            return funcionario;
         }
 
         // Not found in the database
-        log.debug("Can't find Persona with codigo {} in the backend, scrapping ..", codigo);
+        log.debug("Can't find Funcionario with codigo {} in the backend, scrapping ..", codigo);
 
         // Just wait ..
         sleep();
@@ -153,14 +156,14 @@ public final class Main {
         // Get the ficha ..
         final DirectorioUCN.Ficha ficha = DirectorioUCN.scrape(codigo);
 
-        // If ficha null, insert Persona.Status.NOTFOUND
+        // If ficha null, insert Funcionario.Status.NOTFOUND
         if (ficha == null) {
             log.warn("Can't find Ficha {} in DirectorioUCN, skipping ..", codigo);
 
             // Not found, save as UCN_NOTFOUND
-            final Persona p = Persona.builder()
+            final Funcionario p = Funcionario.builder()
                     .codigo(codigo)
-                    .status(Persona.Status.UCN_NOTFOUND)
+                    .status(Funcionario.Status.UCN_NOTFOUND)
                     .build();
 
             theRepo.create(p);
@@ -169,7 +172,7 @@ public final class Main {
         }
 
         // Founded: save as UCN_SCRAPED
-        final Persona p = Persona.builder()
+        final Funcionario p = Funcionario.builder()
                 .codigo(codigo)
                 .nombre(ficha.getNombre())
                 .cargo(ficha.getCargo())
@@ -178,7 +181,7 @@ public final class Main {
                 .telefonoFijo(ficha.getTelefono())
                 .oficina(ficha.getOficina())
                 .direccion(ficha.getDireccion())
-                .status(Persona.Status.UCN_SCRAPED)
+                .status(Funcionario.Status.UCN_SCRAPED)
                 .build();
 
         // Save!

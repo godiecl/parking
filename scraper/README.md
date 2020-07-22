@@ -28,7 +28,7 @@ class Main {
     {static} - log: Logger<Main>
     {static} + main(String[])
     {static} - sleep()
-    {static} - getOrScrape(codigo: int, repo: Repository<Persona, Long>): Persona
+    {static} - getOrScrape(codigo: int, repo: Repository<Funcionario, Long>): Funcionario
 }
 
 package scraper {
@@ -66,7 +66,7 @@ package scraper {
 }
 
 package model {
-    class Persona <<Entity>> {
+    class Funcionario <<Entity>> {
         - id: Long
         - codigo: Integer
         - rut: String
@@ -98,8 +98,8 @@ package model {
         UPLOADED,
     }
 
-    Persona --> Sexo
-    Persona --> Status
+    Funcionario --> Sexo
+    Funcionario --> Status
 }
 
 package DAO {
@@ -128,7 +128,7 @@ package DAO {
 
 Main ..> DirectorioUCN: <<use>>
 Main ..> NombreRutFirma: <<use>>
-Main ..> Persona: <<use>>
+Main ..> Funcionario: <<use>>
 Main ..> Repository: <<use>>
 
 @enduml

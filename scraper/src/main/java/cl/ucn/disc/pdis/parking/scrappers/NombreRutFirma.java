@@ -22,8 +22,9 @@
  * SOFTWARE.
  */
 
-package cl.ucn.disc.pdis.scraper;
+package cl.ucn.disc.pdis.parking.scrappers;
 
+import cl.ucn.disc.pdis.parking.model.Funcionario;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -48,10 +49,10 @@ public final class NombreRutFirma {
     private static final String URL = "https://www.nombrerutyfirma.com/buscar";
 
     /**
-     * Recover all the data for a name of {@link Persona}.
+     * Recover all the data for a name of {@link Funcionario}.
      *
      * @param term to search.
-     * @return the {@link Persona}.
+     * @return the {@link Funcionario}.
      */
     @SneakyThrows
     public static List<Rutificador> scrape(String term) {
