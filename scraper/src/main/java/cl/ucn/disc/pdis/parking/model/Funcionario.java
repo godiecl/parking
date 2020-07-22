@@ -53,6 +53,7 @@ public final class Funcionario {
     /**
      * The Key of Directory UCN.
      */
+    @Getter
     @Column(unique = true, nullable = false)
     private Integer codigo;
 

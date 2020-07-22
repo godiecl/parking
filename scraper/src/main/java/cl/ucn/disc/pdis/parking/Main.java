@@ -24,6 +24,8 @@
 
 package cl.ucn.disc.pdis.parking;
 
+import cl.ucn.disc.pdis.parking.ZeroIce.Model.Persona;
+import cl.ucn.disc.pdis.parking.ZeroIce.Model.Sexo;
 import cl.ucn.disc.pdis.parking.dao.Repository;
 import cl.ucn.disc.pdis.parking.dao.RepositoryOrmLite;
 import cl.ucn.disc.pdis.parking.model.Funcionario;
@@ -31,11 +33,17 @@ import cl.ucn.disc.pdis.parking.scrappers.DirectorioUCN;
 import cl.ucn.disc.pdis.parking.scrappers.NombreRutFirma;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
+import com.zeroc.Ice.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -55,7 +63,7 @@ public final class Main {
     public static void main(final String[] args) throws IOException {
 
         // from .. to ..
-        final int ini = 1;
+        final int ini = 26300;
         final int end = 40000;
 
         // The encryption key to use
@@ -64,7 +72,8 @@ public final class Main {
         log.info("Using DBKEY={} as encryption key.", dbkey);
 
         // The database to use
-        final String jdbc = "jdbc:sqlite:file:funcionarios.db?cipher=chacha20&key=" + dbkey;
+        // final String jdbc = "jdbc:sqlite:file:funcionarios.db?cipher=chacha20&key=" + dbkey;
+        final String jdbc = "jdbc:sqlite:file:funcionarios.db";
 
         // Connection to the database
         try (ConnectionSource cs = new JdbcConnectionSource(jdbc)) {
@@ -117,6 +126,12 @@ public final class Main {
 
                     // Save into the backend
                     repo.update(funcionario);
+
+                    final Persona persona = toPersona(funcionario);
+                    log.debug("Persona: {}", ToStringBuilder.reflectionToString(persona, ToStringStyle.MULTI_LINE_STYLE));
+                    List<Persona> personas = Collections.singletonList(persona);
+                    saveIntoBackend(personas);
+
                 }
 
             }
@@ -199,7 +214,7 @@ public final class Main {
         // Milliseconds
         int base = 2000;
         int max = 3000;
-        int sleep = base + RandomUtils.nextInt(0,max + 1);
+        int sleep = base + RandomUtils.nextInt(0, max + 1);
         log.trace("Sleeping for {}ms.", sleep);
 
         try {
@@ -207,6 +222,80 @@ public final class Main {
         } catch (InterruptedException e) {
             // Nothing here
         }
+    }
+
+    /**
+     * Convert a {@link Funcionario} to {@link Persona}.
+     *
+     * @param funcionario to use.
+     * @return the Persona.
+     */
+    public static Persona toPersona(final Funcionario funcionario) {
+
+        // The Persona of ZeroIce
+        final Persona persona = new Persona();
+        // + properties from zeroice
+        persona.codigo = funcionario.getCodigo();
+        // Remove . and -
+        persona.rut = StringUtils.remove(StringUtils.remove(funcionario.getRut(), "."), "-");
+        persona.nombre = funcionario.getNombre();
+        persona.email = funcionario.getEmail();
+        persona.cargo = funcionario.getCargo();
+        persona.unidad = funcionario.getUnidad();
+        persona.fijo = funcionario.getTelefonoFijo();
+        if (funcionario.getSexo() != null) {
+            persona.sexo = funcionario.getSexo() == Funcionario.Sexo.MASCULINO ? Sexo.MASCULINO : Sexo.FEMENINO;
+        }
+
+        return persona;
+    }
+
+    /**
+     * Send the List of {@link Persona} to the backend.
+     *
+     * @param personas to send.
+     */
+    private static void saveIntoBackend(final List<Persona> personas) {
+
+        // Properties
+        final Properties properties = Util.createProperties();
+        // properties.setProperty("Ice.Package.model", "cl.ucn.disc.pdis.parking.ZeroIce.Model");
+
+        // https://doc.zeroc.com/ice/latest/property-reference/ice-trace
+        properties.setProperty("Ice.Trace.Admin.Properties", "1");
+        properties.setProperty("Ice.Trace.Locator", "2");
+        properties.setProperty("Ice.Trace.Network", "3");
+        properties.setProperty("Ice.Trace.Protocol", "1");
+        properties.setProperty("Ice.Trace.Slicing", "1");
+        properties.setProperty("Ice.Trace.ThreadPool", "1");
+        properties.setProperty("Ice.Compression.Level", "9");
+        // properties.setProperty("Ice.Plugin.Slf4jLogger.java", "cl.ucn.disc.pdis.fivet.zeroice.Slf4jLoggerPluginFactory");
+
+        InitializationData initializationData = new InitializationData();
+        initializationData.properties = properties;
+
+        // The communicator
+        try (Communicator communicator = Util.initialize(initializationData)) {
+
+            // The name
+            final String name = cl.ucn.disc.pdis.parking.ZeroIce.Services.Repository.class.getName();
+            log.debug("Proxying <{}> ..", name);
+
+            ObjectPrx theProxy = communicator.stringToProxy(name + ":tcp -z -t 15000 -p 8080");
+            cl.ucn.disc.pdis.parking.ZeroIce.Services.RepositoryPrx theRepo = cl.ucn.disc.pdis.parking.ZeroIce.Services.RepositoryPrx.checkedCast(theProxy);
+
+            if (theRepo == null) {
+                throw new IllegalStateException("Invalid RepositoryPrx! (wrong proxy?)");
+            }
+
+            for (final Persona persona : personas) {
+                log.debug("Sending Persona {} -> {}.", persona.codigo, persona.nombre);
+                theRepo.save(persona);
+            }
+        } catch (ConnectionRefusedException ex) {
+            log.warn("Backend error", ex);
+        }
+
     }
 
 }

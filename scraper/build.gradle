@@ -26,15 +26,16 @@ plugins {
     id 'java'
     id 'com.github.ben-manes.versions' version '0.29.0'
     id 'io.freefair.lombok' version '5.1.0'
+    id 'com.zeroc.gradle.ice-builder.slice' version '1.4.7'
 }
 
 allprojects {
     // Use the temp directory to build temporals
-    buildDir = "${System.env.TEMP}//gradle-build//${rootProject.name}//${project.name}"
+    // buildDir = "${System.env.TEMP}//gradle-build//${rootProject.name}//${project.name}"
 }
 
 group 'cl.ucn.disc.pdis'
-version '0.0.5'
+version '0.0.6'
 
 // The java version code
 java {
@@ -53,6 +54,18 @@ test {
     // Run the test in parallel
     systemProperty 'junit.jupiter.execution.parallel.enabled', 'true'
     systemProperty 'junit.jupiter.execution.parallel.mode.default', 'concurrent'
+}
+
+slice {
+
+    // The home of ice
+    iceHome = 'D:\\DevTools\\Ice-3.7.4\\'
+
+    java {
+        files = [file("../domain.ice")]
+        args = "--debug --impl"
+        logger.lifecycle("Slicing file: <${files}>")
+    }
 }
 
 repositories {
@@ -97,5 +110,8 @@ dependencies {
 
     // SQLite Database driver (encryption support)
     implementation 'io.github.willena:sqlite-jdbc:3.31.1'
+
+    // Zero ICE
+    implementation 'com.zeroc:ice:3.7.4'
 
 }
