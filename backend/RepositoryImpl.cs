@@ -3,9 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Parking.Dao;
 using Parking.ZeroIce.Model;
-using Parking.ZeroIce.Services;
 
-namespace Parking.ZeroIce
+namespace Parking.ZeroIce.Services
 {
     /// <summary>
     /// Repository (ZeroIce) implementation.
