@@ -1,21 +1,58 @@
-# Proyecto Parking
+# Parking Project
 
 * **Asignatura**: DAIS-00720 Proyecto de Desarrollo e Integración de Soluciones.
 * **Semestre**: 202010.
 * **Carrera**: Ingeniería en Computación e Informática.
 * **Universidad**: Universidad Católica del Norte, Antofagasta, Chile.
 
-## Tecnologías
+## Techstack
 
-* Java:
-    * [JDK v11](https://openjdk.java.net/projects/jdk/11/).
-    * [Jetbrains IntelliJ 2020.2 EAP](https://www.jetbrains.com/idea/nextversion/).
-    * [Gradle v6.5](https://gradle.org/).
-    * [JUnit v5.7.0](https://junit.org/junit5/).
-    * [GSon v2.8.6](https://github.com/google/gson).
-    * [SLF4J v1.8.0](http://www.slf4j.org/) + [Logback v1.3.0](http://logback.qos.ch/).
-    * [ORMLite v5.1](https://ormlite.com/) + [SQLite v3.31.1](https://github.com/xerial/sqlite-jdbc).
-* PHP:
-    * [PHP v7.4.7](https://www.php.net/).
-    * [Jetbrains IntelliJ 2020.2 EAP](https://www.jetbrains.com/idea/nextversion/) + [PHP Plugin](https://plugins.jetbrains.com/plugin/6610-php).
-    * [Laravel v7.2.5](https://laravel.com/docs/7.x).
+* [Java OpenJDK 11](https://openjdk.java.net/projects/jdk/11/).
+* [Jetbrains IntelliJ](https://www.jetbrains.com/idea/nextversion/).
+* [Gradle](https://gradle.org/).
+* [ZeroIce](https://zeroc.com/).
+* [PHP](https://www.php.net/).
+* [.NET Core](https://dotnet.microsoft.com/).
+* [EntityFramework Core](https://docs.microsoft.com/en-us/ef/core/).
+* [Jetbrains Rider](https://www.jetbrains.com/rider/nextversion/).
+* [SQLite](https://www.sqlite.org/).
+
+## Domain Model
+
+![](domain.svg)
+
+<details><summary>PlantUML</summary>
+<p>
+
+```
+@startuml
+
+package Model {
+
+    class Persona <<Entity>> {
+        - uid: Long
+        - codigo: Integer
+        - rut: String
+        - nombre: String
+        - email: String
+        - cargo: String
+        - unidad: String
+        - direccion: String
+        - sexo: Sexo
+        - movil: String
+        - fijo: String
+    }
+
+    enum Sexo {
+        MASCULINO,
+        FEMENINO
+    }
+    Persona --> Sexo
+        
+}        
+
+@enduml
+```
+
+</p>
+</details>
