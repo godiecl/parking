@@ -63,7 +63,7 @@ public final class Main {
     public static void main(final String[] args) throws IOException {
 
         // from .. to ..
-        final int ini = 26300;
+        final int ini = 1;
         final int end = 40000;
 
         // The encryption key to use
@@ -278,10 +278,7 @@ public final class Main {
         try (Communicator communicator = Util.initialize(initializationData)) {
 
             // The name
-            final String name = cl.ucn.disc.pdis.parking.ZeroIce.Services.Repository.class.getName();
-            log.debug("Proxying <{}> ..", name);
-
-            ObjectPrx theProxy = communicator.stringToProxy(name + ":tcp -z -t 15000 -p 8080");
+            ObjectPrx theProxy = communicator.stringToProxy("Repository:tcp -z -t 15000 -p 8080");
             cl.ucn.disc.pdis.parking.ZeroIce.Services.RepositoryPrx theRepo = cl.ucn.disc.pdis.parking.ZeroIce.Services.RepositoryPrx.checkedCast(theProxy);
 
             if (theRepo == null) {
