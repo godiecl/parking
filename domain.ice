@@ -88,7 +88,7 @@ module ZeroIce {
             /**
              * The telefono movil
              */
-            string telefono;
+            string movil;
 
             /**
              * The telefono fijo
@@ -102,16 +102,618 @@ module ZeroIce {
 
         }
 
+        /**
+         * The Marca.
+         */
+        enum Marca {
+            AJS,
+            AMC,
+            APT,
+            ATV,
+            Abat,
+            Acadian,
+            Acura,
+            Adventure,
+            Agrale,
+            Agromaq,
+            Agusta,
+            AlfaRomeo,
+            Altec,
+            AmericanMotors,
+            Ammann,
+            AndersonTrailers,
+            Aprilia,
+            ArcticCat,
+            Aro,
+            AsiaMotors,
+            AstonMartin,
+            AtlasCopco,
+            Audi,
+            Ausa,
+            Austin,
+            Autorrad,
+            AvelingBarford,
+            BAIC,
+            BAW,
+            BMW,
+            BRPCANAM,
+            BSA,
+            BYD,
+            Baja,
+            Bajaj,
+            Baldan,
+            Bayliner,
+            Beiben,
+            Belarus,
+            Benelli,
+            Benford,
+            Bertone,
+            Beta,
+            Bianchi,
+            Bimota,
+            Blumhardt,
+            Bobcat,
+            Bomag,
+            Bombardier,
+            Bonluck,
+            Borgward,
+            Breuer,
+            Breviglieri,
+            Brilliance,
+            BroceBroom,
+            Buell,
+            Buggy,
+            Buick,
+            Busscar,
+            ByB,
+            CFMoto,
+            CRG,
+            Caburga,
+            Cadillac,
+            Cagiva,
+            Caio,
+            CanAm,
+            Canoa,
+            Carraro,
+            Case,
+            Caterpillar,
+            Challenger,
+            Champion,
+            Changan,
+            Changhe,
+            Changlin,
+            ChengGong,
+            Cherokee,
+            Chery,
+            Chevrolet,
+            Chrysler,
+            Cima,
+            Citroen,
+            Claas,
+            Clinton,
+            Coachmen,
+            Cobalt,
+            Cobra,
+            Coleman,
+            Coloso,
+            Comil,
+            Compair,
+            Craftsman,
+            Cross,
+            Curiram,
+            DFM,
+            DFSK,
+            Dadyw,
+            Daelim,
+            Daewoo,
+            Daf,
+            Daihatsu,
+            Datsun,
+            Dax,
+            Dayun,
+            Demag,
+            DeutzFahr,
+            Dieci,
+            Dimex,
+            Dinolift,
+            Divermaq,
+            Dodge,
+            Dongfeng,
+            Doosan,
+            Doyayama,
+            Ducar,
+            Ducati,
+            EGL,
+            Eagle,
+            Euromot,
+            Europard,
+            Evinrude,
+            Exel,
+            Falc,
+            Farmtrac,
+            Fassi,
+            Faw,
+            Fernandez,
+            Ferrari,
+            Fiat,
+            Fiatallis,
+            Fibermold,
+            Fleewood,
+            Ford,
+            ForestRiver,
+            Forson,
+            Foton,
+            Four,
+            Freightliner,
+            Fruehauf,
+            Fullcar,
+            Futong,
+            GACGonow,
+            GACMotors,
+            GMC,
+            GTBicycles,
+            Gama,
+            Garelli,
+            GasGas,
+            Geely,
+            Genie,
+            Gilera,
+            Glastron,
+            GoldenDragon,
+            Goldini,
+            Goren,
+            GreatDane,
+            GreatWall,
+            Greenmaster,
+            Grimme,
+            Grove,
+            Guowei,
+            Guzzi,
+            Hafei,
+            Haima,
+            Hamm,
+            Hammel,
+            Hangcha,
+            Hardi,
+            HarleyDavidson,
+            Hechizo,
+            Heli,
+            Hensim,
+            Hidromek,
+            Higer,
+            Hino,
+            Hisun,
+            Hitachi,
+            Honda,
+            Honex,
+            Hood,
+            Howard,
+            HuanghaiSG,
+            Huatai,
+            Hudson,
+            Hummer,
+            Husaberg,
+            Husqvarna,
+            Hyosung,
+            Hyster,
+            Hyundai,
+            Ibiza,
+            Ika,
+            Indian,
+            Infiniti,
+            IngersollRand,
+            Inrecar,
+            International,
+            Irizar,
+            Isuzu,
+            Italev,
+            Iveco,
+            Ivesa,
+            JACMotors,
+            JBC,
+            JCB,
+            JF,
+            JLG,
+            JMC,
+            Jaar,
+            Jacto,
+            Jaguar,
+            Jan,
+            Jawa,
+            Jayco,
+            Jeep,
+            Jiapeng,
+            Jinbei,
+            Jincheng,
+            Jinlun,
+            JohnDeere,
+            Jonway,
+            Joyride,
+            Jumil,
+            Jurmar,
+            KTM,
+            KZ,
+            Kamaz,
+            KarmannCaravan,
+            Kaufman,
+            Kawasaki,
+            Keeway,
+            Kenworth,
+            Kia,
+            KiaMotors,
+            KingLong,
+            Kinlon,
+            Kinroad,
+            Kobelco,
+            Komatsu,
+            Krone,
+            Kuberg,
+            Kubota,
+            Kuhn,
+            Kvernerland,
+            Kymco,
+            LML,
+            Lada,
+            Lamborghini,
+            Lambretta,
+            Lancia,
+            LandMark,
+            LandRover,
+            Landini,
+            Landwind,
+            Larson,
+            Lely,
+            Lemken,
+            Lerpain,
+            Lexus,
+            LianMei,
+            Librelato,
+            Liebherr,
+            Lifan,
+            Lincoln,
+            Linde,
+            LinkBelt,
+            Liugong,
+            Loncin,
+            Lonking,
+            Lotus,
+            MG,
+            MPT,
+            MSK,
+            MTD,
+            MVAgusta,
+            Machile,
+            Mack,
+            Madal,
+            Mahindra,
+            Maico,
+            Malbec,
+            Man,
+            Manitou,
+            Mapel,
+            Marcopolo,
+            Mariah,
+            Mariner,
+            Maserati,
+            Masmetal,
+            Masseyferguson,
+            MathewsCompany,
+            Maxibus,
+            Maxum,
+            Maxus,
+            Mayov,
+            Mazda,
+            McLaren,
+            Megelli,
+            MercedesBenz,
+            Mercury,
+            Metalpar,
+            Metaltec,
+            Michigan,
+            Mikilon,
+            MiniCooper,
+            Mits,
+            Mitsubishi,
+            Monon,
+            Monster,
+            Montelli,
+            Montenegro,
+            Monterrey,
+            Montesa,
+            Morris,
+            Motar,
+            MotoABC,
+            Motobi,
+            Motoguzzi,
+            Motomel,
+            Motorhome,
+            Motorrad,
+            Motostock,
+            Movil,
+            Mussre,
+            Mustang,
+            NationalCrane,
+            Nautic,
+            Nauticat,
+            Neobus,
+            NewHolland,
+            Nissan,
+            Nitro,
+            Nordkapp,
+            Oayun,
+            Oldsmobile,
+            Omega,
+            Opel,
+            Oxford,
+            PGO,
+            PYH,
+            PZ,
+            Packard,
+            Palfinger,
+            Parada,
+            Peerless,
+            Pegaso,
+            Peterbilt,
+            Peugeot,
+            Piaggio,
+            Pioneer,
+            PitBike,
+            Plymouth,
+            Polaris,
+            Pontiac,
+            Porsche,
+            Prentice,
+            Proton,
+            Quingri,
+            RAM,
+            Randon,
+            RangeRover,
+            Rautop,
+            Regal,
+            RegalRaptor,
+            Renault,
+            Resainox,
+            Robot,
+            Rockwood,
+            RollsRoyce,
+            Rotax,
+            Rover,
+            SDLG,
+            SMA,
+            SYM,
+            Saab,
+            Sachs,
+            Same,
+            Samsung,
+            Sanlg,
+            Sanya,
+            Scania,
+            SeaDoo,
+            SeaRay,
+            Seat,
+            Semirigido,
+            Shacman,
+            Shangai,
+            Shelby,
+            Shenyang,
+            Sherco,
+            Shifeng,
+            Shineray,
+            SilverMarine,
+            Simca,
+            Simson,
+            Sinmarca,
+            Sinotruck,
+            Sinski,
+            SkiDoo,
+            Skoda,
+            Skygo,
+            Smart,
+            Sonalika,
+            SouthMarine,
+            Speedo,
+            Spitz,
+            Sportbas,
+            Ssangyong,
+            Stallion,
+            Standard,
+            Stara,
+            StarcraftRV,
+            Stingray,
+            Stoll,
+            Strick,
+            Subaru,
+            Sukida,
+            Sullair,
+            Sumo,
+            Sunlong,
+            SuperProducts,
+            Surco,
+            Suzuki,
+            TCM,
+            TM,
+            Tahoe,
+            Takasaki,
+            Tata,
+            Tatu,
+            Tecnomad,
+            Terex,
+            Thompson,
+            Thwaites,
+            Tiger,
+            Torito,
+            Toyota,
+            Trailer,
+            Trailmobile,
+            Travin,
+            Trayers,
+            Trek,
+            Tremac,
+            Triumph,
+            UnitedMotors,
+            Universal,
+            Ural,
+            Utility,
+            Valmet,
+            Valtra,
+            VanHool,
+            Vargas,
+            Vento,
+            Vermeer,
+            Verona,
+            Vespa,
+            Vicon,
+            Vitalmetal,
+            Volare,
+            Volkswagen,
+            Volvo,
+            Wabash,
+            Wagner,
+            WalkerBay,
+            Wanch,
+            Wangye,
+            Willys,
+            Winnebago,
+            Witzco,
+            Wolken,
+            XBH,
+            XCMG,
+            Xgjao,
+            Xmotor,
+            YTO,
+            Yale,
+            Yamaha,
+            Yanmar,
+            Yaxing,
+            Yinxiang,
+            Yuejin,
+            Yugo,
+            Yutong,
+            ZNA,
+            ZXAuto,
+            Zastava,
+            Zeppelin,
+            Zero,
+            Zetor,
+            Zhongtong,
+            ZnenGroup,
+            Zodiac,
+            Zongshen,
+            Zoomlion,
+            Zotye,
+            Zumotho,
+        }
+
+        /**
+         * The Vehiculo.
+         */
+        ["cs:property"]
+        struct Vehiculo {
+
+            /**
+             * Primary key (autogenerated).
+             */
+            int uid;
+
+            /**
+             * The Patente.
+             */
+            string placa;
+
+            /**
+             * The Modelo.
+             */
+            string modelo;
+
+            /**
+             * The Anio.
+             */
+            int anio;
+
+            /**
+             * The Observacion.
+             */
+            string observacion;
+
+            /**
+             * The Marca.
+             */
+            Marca marca;
+
+        }
+
+        /**
+         * The Sexo.
+         */
+        enum Porteria {
+            // Gimnasio
+            SUR,
+            // Principal
+            CENTRAL,
+            // Subida Coviefi
+            MANCILLA,
+            // CEDUC
+            SANGRA,
+            // Ruinas
+            HUANCHACA
+        }
+
+        /**
+         * The Registro.
+         */
+        ["cs:property"]
+        struct Registro {
+
+            /**
+             * Primary key (autogenerated).
+             */
+            int uid;
+
+            /**
+             * The Porteria.
+             */
+            Porteria porteria;
+
+            /**
+             * The Vehiculo.
+             */
+            Vehiculo vehiculo;
+
+            /**
+             * The date.
+             */
+            string fecha;
+
+        }
+
     }
 
     /**
-     * The Services
+     * The Services.
      */
     module Services {
 
+        /**
+         * The Repository.
+         */
         interface Repository {
 
+            /**
+             * Save the Persona, save the world.
+             */
             Model::Persona save(Model::Persona persona);
+
+        }
+
+        /**
+         * The Control.
+         */
+        interface Control {
+
+            /**
+             * Record the entry of a Vehicle.
+             */
+            Model::Registro save(Model::Registro registro);
 
         }
 

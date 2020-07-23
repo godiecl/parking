@@ -30,7 +30,7 @@
 package Model {
 
     class Persona <<Entity>> {
-        - uid: Long
+        - uid: int
         - codigo: Integer
         - rut: String
         - nombre: String
@@ -38,18 +38,53 @@ package Model {
         - cargo: String
         - unidad: String
         - direccion: String
-        - sexo: Sexo
         - movil: String
         - fijo: String
+        - sexo: Sexo
     }
 
     enum Sexo {
-        MASCULINO,
+        MASCULINO
         FEMENINO
     }
     Persona --> Sexo
-        
-}        
+
+    enum Marca {
+        AJS
+        Acura
+        Audi
+        ...
+    }
+
+    class Vehiculo <<Entity>> {
+        - uid: int
+        - placa: String
+        - modelo: String
+        - anio: int
+        - observacion: String
+        - marca: Marca
+    }
+    Vehiculo --> Marca
+    Persona --> Vehiculo
+
+    enum Porteria {
+        SUR
+        CENTRAL
+        MANCILLA
+        SANGRA
+        HUANCHACA
+    }
+
+    class Registro <<Entity>> {
+        - uid: int
+        - fecha: String
+        - vehiculo: Vehiculo
+        - porteria: Porteria
+    }
+    Registro --> Porteria
+    Registro --> Vehiculo
+
+}
 
 @enduml
 ```
