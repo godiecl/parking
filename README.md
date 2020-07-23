@@ -1,9 +1,11 @@
-# Parking Project
+# The Parking Project
 
-* **Asignatura**: DAIS-00720 Proyecto de Desarrollo e Integración de Soluciones.
-* **Semestre**: 202010.
-* **Carrera**: Ingeniería en Computación e Informática.
-* **Universidad**: Universidad Católica del Norte, Antofagasta, Chile.
+<p align="center"><img src="ucn.jpg"></p>
+
+* **Course**: DAIS-00720 Proyecto de Desarrollo e Integración de Soluciones.
+* **Semester**: 202010.
+* **Program**: Ingeniería en Computación e Informática.
+* **University**: Universidad Católica del Norte, Antofagasta, Chile.
 
 ## Techstack
 
@@ -12,10 +14,13 @@
 * [Gradle](https://gradle.org/).
 * [ZeroIce](https://zeroc.com/).
 * [PHP](https://www.php.net/).
+* [Laravel Framework](https://laravel.com/).
 * [.NET Core](https://dotnet.microsoft.com/).
 * [EntityFramework Core](https://docs.microsoft.com/en-us/ef/core/).
 * [Jetbrains Rider](https://www.jetbrains.com/rider/nextversion/).
 * [SQLite](https://www.sqlite.org/).
+* [Kotlin](https://developer.android.com/kotlin).
+* [Android Studio Preview](https://developer.android.com/studio/preview).
 
 ## Domain Model
 
@@ -91,3 +96,6 @@ package Model {
 
 </p>
 </details>
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
