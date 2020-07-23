@@ -17,6 +17,7 @@
 * JUnit: [org.junit.jupiter:junit-jupiter](https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api).
 * ZeroIce: [com.zeroc:ice](https://mvnrepository.com/artifact/com.zeroc/ice).
 * ORMLite: [com.j256.ormlite:ormlite-core](https://mvnrepository.com/artifact/com.j256.ormlite/ormlite-core).
+* SQLite (encrypt support): [io.github.willena:sqlite-jdbc](https://mvnrepository.com/artifact/io.github.willena/sqlite-jdbc).
 
 ## Class Diagram
 
