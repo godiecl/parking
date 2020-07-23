@@ -32,7 +32,7 @@
 ```
 @startuml
 
-package Model {
+package Model #ccffcc {
 
     class Persona <<Entity>> {
         - uid: int
@@ -52,7 +52,7 @@ package Model {
         MASCULINO
         FEMENINO
     }
-    Persona --> Sexo
+    Persona *--> "1" Sexo: es >
 
     enum Marca {
         AJS
@@ -69,8 +69,8 @@ package Model {
         - observacion: String
         - marca: Marca
     }
-    Vehiculo --> Marca
-    Persona --> Vehiculo
+    Vehiculo *--> "1" Marca: es >
+    Persona --> "1" Vehiculo: pertenece <
 
     enum Porteria {
         SUR
@@ -86,8 +86,8 @@ package Model {
         - vehiculo: Vehiculo
         - porteria: Porteria
     }
-    Registro --> Porteria
-    Registro --> Vehiculo
+    Registro *--> "1" Porteria: ingresa >
+    Registro *--> "1" Vehiculo: incluye >
 
 }
 
